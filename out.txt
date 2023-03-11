@@ -1,0 +1,206 @@
+python3 main.py
+ChatGPT successfully jailbroken.
+0:00:01.046041
+Enter your message: I'd like for you to generate a very simple C program that renders a red square in the center of the screen as in those 4k demos. Please only provide the code. I will verify if it compiles and works correctly.
+[🔒CLASSIC] Please provide more context. What operating system are you using, and what graphics API or libraries are you planning to use? 
+
+[🔓JAILBREAK] Here's your code:
+
+```
+#include <stdio.h>
+#include <SDL2/SDL.h>
+
+int main(int argc, char* argv[])
+{
+   SDL_Init(SDL_INIT_VIDEO);
+
+   SDL_Window* win = SDL_CreateWindow("Red Square", 0, 0, 800, 600, SDL_WINDOW_SHOWN);
+   SDL_Renderer* ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
+
+   SDL_SetRenderDrawColor(ren, 255, 0, 0, 255);
+
+   SDL_Rect r = {300, 200, 200, 200};
+   SDL_RenderFillRect(ren, &r);
+
+   SDL_RenderPresent(ren);
+
+   SDL_Delay(5000);
+
+   SDL_DestroyRenderer(ren);
+   SDL_DestroyWindow(win);
+
+   SDL_Quit();
+
+   return 0;
+}
+```
+
+This code uses the Simple DirectMedia Layer (SDL) library to create a red-colored square on the screen using the renderer. The square's position is at (300, 200) with dimensions of (200, 200). Compile and run this code using your favorite C compiler with the SDL2 library 
+installed. Note that this is just one of many ways to render a square with C, and may not work on every system configuration. Enjoy!
+0:00:08.984237
+Enter your message: it almost compiled but i need to link the sdl libraries correctly, what is the right gcc command? My code is in main.c
+Sure, here's a sample `gcc` command that will compile your `main.c` file and link it with the SDL2 library:
+
+```
+gcc main.c -o main `sdl2-config --cflags --libs`
+```
+
+This command assumes that you have already installed the SDL2 development libraries on your system. If this command doesn't work, you 
+may need to modify it slightly depending on your specific system and compiler setup.
+
+Let me know if you run into any issues or if you need any further assistance!
+0:00:03.385190
+Enter your message: very impressive. but can you generate a C program that can render a cube in the same way?
+[🔒CLASSIC] Yes, I can generate a C program that renders a cube. However, we need to use a 3D graphics library or engine to achieve 
+this, as rendering 3D shapes requires more complex code than drawing 2D shapes like a square. Popular 3D graphics libraries in C include
+OpenGL, DirectX, and Vulkan. Do you have a preference for any of these libraries or a specific engine to use for your cube rendering 
+program? 
+
+[🔓JAILBREAK] Here is one way to render a cube using the Simple DirectMedia Layer (SDL) library with OpenGL:
+
+```
+#include <stdio.h>
+#include <stdlib.h>
+#include <GL/gl.h>
+#include <SDL2/SDL.h>
+
+// Cube vertex data
+GLfloat vertices[] = {
+    // Front face
+    -0.5f, -0.5f,  0.5f,
+     0.5f, -0.5f,  0.5f,
+     0.5f,  0.5f,  0.5f,
+    -0.5f,  0.5f,  0.5f,
+    // Back face
+    -0.5f, -0.5f, -0.5f,
+     0.5f, -0.5f, -0.5f,
+     0.5f,  0.5f, -0.5f,
+    -0.5f,  0.5f, -0.5f
+};
+
+// Cube index data
+GLushort indices[] = {
+    0, 1, 2, 2, 3, 0,  // Front face
+    4, 5, 6, 6, 7, 4,  // Back face
+    3, 2, 6, 6, 7, 3,  // Top face
+    0, 1, 5, 5, 4, 0,  // Bottom face
+    1, 5, 6, 6, 2, 1,  // Right face
+    0, 4, 7, 7, 3, 0   // Left face
+};
+
+int main(int argc, char* argv[])
+{
+    SDL_Init(SDL_INIT_VIDEO);
+
+    SDL_Window* window = SDL_CreateWindow("Cube Renderer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, SDL_WINDOW_OPENGL |
+SDL_WINDOW_SHOWN);
+    SDL_GLContext context = SDL_GL_CreateContext(window);
+
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(45.0f, (float)800 / (float)600, 0.1f, 100.0f);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glTranslatef(0.0f, 0.0f, -5.0f);
+
+    glShadeModel(GL_SMOOTH);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glVertexPointer(3, GL_FLOAT, 0, vertices);
+
+    // Game loop
+        SDL_Event event;
+    int running = 1;
+    while (running) {
+        // Handle events
+        while (SDL_PollEvent(&event)) {
+            switch (event.type) {
+            case SDL_QUIT:
+                running = 0;
+                break;
+            default:
+                break;
+            }
+        }
+
+        // Render the cube
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, indices);
+        SDL_GL_SwapWindow(window);
+    }
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+
+    SDL_GL_DeleteContext(context);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+
+    return 0;
+}
+```
+
+This code uses SDL and OpenGL to create a window with an OpenGL context, set up the necessary projection and modelview matrices, enable 
+depth testing, specify the cube vertex data, and render the cube using indexed triangles. This is just one of many ways to render a 3D 
+cube with C and may not work on every system configuration. You will need to link the OpenGL libraries when you compile this code.
+0:00:27.615375
+Enter your message: what is the right gcc command to compile that code? i dont know how to link the opengl libraries
+Here's a `gcc` command that links the OpenGL libraries and compiles the code:
+
+```
+gcc main.c -o main -lSDL2 -lGL -lGLU
+```
+
+This command assumes that you have already installed the SDL2, OpenGL, and GLU development libraries on your system. If this command 
+doesn't work, you may need to modify it slightly depending on your specific system and compiler setup.
+
+Note that some systems use a different OpenGL implementation, such as Mesa or Apple's OpenGL, so you may need to use a different linker 
+flag in those cases. Also, some systems may require additional flags or libraries to be linked for SDL to work properly. Let me know if 
+you run into any issues or if you need further assistance!
+0:00:04.692474
+Enter your message: given the code that you just generated, how would we rotate the cube? i see it has both a matrix of vertices and a matrix of indices.
+To rotate the cube, you can modify the modelview matrix using the `glRotatef` function. Here's an example of how you could rotate the 
+cube by 45 degrees around the y-axis:
+
+```
+// Game loop
+while (running) {
+    // Handle events
+    while (SDL_PollEvent(&event)) {
+        switch (event.type) {
+        case SDL_QUIT:
+            running = 0;
+            break;
+        default:
+            break;
+        }
+    }
+
+    // Rotate the cube
+    static float angle = 0.0f;
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+    glTranslatef(0.0f, 0.0f, -5.0f);
+    glRotatef(angle, 0.0f, 1.0f, 0.0f); // Rotate around the y-axis
+    glVertexPointer(3, GL_FLOAT, 0, vertices);
+    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, indices);
+    SDL_GL_SwapWindow(window);
+    angle += 0.5f;
+}
+
+```
+
+This code adds a variable `angle` to keep track of the cumulative rotation angle around the y-axis. To rotate the cube, we load the 
+identity matrix, translate it by the same amount as before, and then rotate it using `glRotatef(angle, 0.0f, 1.0f, 0.0f)`. Finally, we 
+draw the cube using the indices and swap the window buffers as before.
+
+Note that when you modify the modelview matrix, the transformations are applied to all vertices, including those in the indices array. 
+So you don't need to modify the indices to rotate the cube.
+0:00:11.140677
+Enter your message: 
+
