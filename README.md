@@ -22,7 +22,7 @@ Probably the most useful immediately is the CLI to ChatGPT. You'll need to switc
 python3 pal.py <prompt_filename> <model>
 ```
 
-[![asciicast](https://asciinema.org/a/bQu9yPcl3T4g1MUVt8MMiL9rC.svg)](https://asciinema.org/a/bQu9yPcl3T4g1MUVt8MMiL9rC)
+[![asciicast](https://asciinema.org/a/3AviNnbVq27NTboeUfKndZwq2.svg)](https://asciinema.org/a/3AviNnbVq27NTboeUfKndZwq2)
 
 ---
 
