@@ -28,11 +28,12 @@ def initialize_openai():
     openai.organization = os.getenv('OPENAI_ORG')
     openai.api_key = os.getenv('OPENAI_API_KEY')
     model = sys.argv[1]
-    if 'gpt-3.5' in model:
-        return 'gpt-3.5-turbo'
-    elif 'gpt-3.5-16k' in model:
+    print("model:", model)
+    if 'gpt-3.5-16k' in model or 'gpt3.5-16k' in model or 'gpt3.516k' in model:
         return 'gpt-3.5-turbo-16k'
-    elif 'gpt-4' in model or 'gpt4' in model:
+    if 'gpt-3.5' in model or 'gpt3.5' in model or 'gpt3' in model or 'gpt-3' in model:
+        return 'gpt-3.5-turbo'
+    if 'gpt-4' in model or 'gpt4' in model:
         return 'gpt-4-1106-preview'
     # error out 
     rich.print("[bold red]Error[/bold red]: invalid model")
