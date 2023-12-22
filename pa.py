@@ -146,7 +146,7 @@ def main_loop(model, messages):
 
 def check_usage():
     if len(sys.argv) != 3:
-        print("Usage: python3 pa.py <prompt_filename> <model>")
+        print("Usage: python3 pa.py <model> <prompt_filepath>")
         sys.exit(1)
 
 
