@@ -76,6 +76,9 @@ def send_message(model, messages):
 
 def log_chat(messages, chatlog_dir="chatlogs"):
     index = 0
+    # verify directory exists
+    if not os.path.exists(chatlog_dir):
+        os.makedirs(chatlog_dir)
     filename = os.path.join(chatlog_dir, f"chatlog{index}.json")
     while os.path.exists(filename):
         index += 1
