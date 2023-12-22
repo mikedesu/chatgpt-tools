@@ -19,8 +19,7 @@ python3 pa.py <model> <prompt_filename>
 
 ```
 git clone https://github.com/mikedesu/chatgpt-tools.git
-cd scripts
-python3 pal.py prompts/coder.txt gpt-4
+python3 pa.py coder.txt gpt3.5
 ```
 
 
