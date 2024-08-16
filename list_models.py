@@ -1,8 +1,9 @@
 import os
-import openai
-openai.api_key = os.getenv("OPENAI_API_KEY")
+from openai import OpenAI
 
-model_list = openai.Model.list()
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+model_list = client.models.list()
 
 #print(model_list)
 
