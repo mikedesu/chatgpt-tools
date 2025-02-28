@@ -1,1 +1,0 @@
-Best practices for securing IoT devices include changing default passwords, regularly updating firmware, isolating IoT devices on a separate network segment, and implementing strong encryption for data transmission.

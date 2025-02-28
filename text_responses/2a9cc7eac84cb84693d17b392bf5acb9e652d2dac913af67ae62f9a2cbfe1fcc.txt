@@ -1,1 +1,0 @@
-Do you have access to the target system that we will be trying to exploit?

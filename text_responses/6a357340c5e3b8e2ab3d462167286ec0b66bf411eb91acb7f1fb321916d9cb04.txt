@@ -1,1 +1,0 @@
-Attackers exploit directory traversal by manipulating input to access files outside the intended directory, often using sequences like '../' to navigate up the file system. Developers can prevent these attacks by validating and sanitizing all user inputs, using whitelists for allowed paths, and implementing proper access controls to restrict file system access.

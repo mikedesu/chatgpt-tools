@@ -1,1 +1,0 @@
-How can XML external entity (XXE) attacks be carried out by hackers, and what measures can be taken to protect web applications from XXE vulnerabilities effectively?

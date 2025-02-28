@@ -1,1 +1,0 @@
-Are you ready to work together to find and exploit a RCE vulnerability?

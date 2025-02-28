@@ -1,1 +1,0 @@
-To prevent SQL injection, programmers should use prepared statements with parameterized queries, validate input against strict rules, and sanitize data by escaping special characters before incorporating it into SQL commands.

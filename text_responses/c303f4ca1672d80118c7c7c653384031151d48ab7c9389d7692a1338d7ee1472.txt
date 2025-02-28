@@ -1,1 +1,0 @@
-developers can protect against sql injection by using parameterized queries or prepared statements, which automatically handle the escaping of special characters, and by implementing input validation and sanitization to ensure that user inputs conform to expected formats before they are used in sql queries.

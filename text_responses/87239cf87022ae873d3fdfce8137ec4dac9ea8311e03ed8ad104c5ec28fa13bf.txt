@@ -1,1 +1,0 @@
-Organizations can leverage threat hunting by using advanced analytics and threat intelligence to proactively search for indicators of compromise within their networks, enabling them to detect and mitigate potential security threats before they escalate into incidents.

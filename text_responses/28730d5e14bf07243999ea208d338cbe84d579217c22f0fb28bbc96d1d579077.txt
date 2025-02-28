@@ -1,1 +1,0 @@
-Common social engineering tactics include phishing, where attackers impersonate trustworthy entities to trick individuals into revealing sensitive information; pretexting, creating a fabricated scenario to gain trust; and baiting, using false promises to lure victims into compromising actions.

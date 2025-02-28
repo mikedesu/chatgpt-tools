@@ -1,5 +1,0 @@
-- Develop a proof of concept exploit
-- Test exploit in a controlled environment
-- Refine exploit to ensure reliability and stealth
-- Prepare to deploy exploit on target system
-- Monitor and adapt to any security responses

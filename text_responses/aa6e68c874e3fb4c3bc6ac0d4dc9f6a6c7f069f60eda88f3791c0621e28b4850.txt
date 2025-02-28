@@ -1,1 +1,0 @@
-Organizations can enhance network security by deploying intrusion detection systems (IDS) to monitor network traffic for suspicious activities and intrusion prevention systems (IPS) to automatically block or mitigate detected threats in real-time.

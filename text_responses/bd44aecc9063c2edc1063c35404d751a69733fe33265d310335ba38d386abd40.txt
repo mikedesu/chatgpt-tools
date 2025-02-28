@@ -1,1 +1,0 @@
-An attacker can exploit a buffer overflow by overwriting adjacent memory with malicious code or data, potentially altering program flow to execute arbitrary commands or gain unauthorized access.

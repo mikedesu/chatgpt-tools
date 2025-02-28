@@ -1,1 +1,0 @@
-What are the common methods used by hackers to exploit buffer overflow vulnerabilities in software, and what techniques can be implemented to prevent such attacks effectively?

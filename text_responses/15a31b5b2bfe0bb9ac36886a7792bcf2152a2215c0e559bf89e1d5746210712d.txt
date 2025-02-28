@@ -1,5 +1,0 @@
-- Research specific versions of software to target, focusing on recent releases.
-- Implement continuous scanning with tools like AFL or libFuzzer for fuzzing, and SonarQube for static analysis.
-- Write exploit code with clear comments, ensuring it can be easily modified for different scenarios.
-- Use tools like QEMU or VirtualBox for setting up the testing environment.
-- Follow a template for the disclosure report, including vulnerability details, exploit code, and mitigation suggestions.

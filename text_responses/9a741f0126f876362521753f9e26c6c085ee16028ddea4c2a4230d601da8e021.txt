@@ -1,5 +1,0 @@
-- Identify target software
-- Gather documentation and source code if available
-- Use automated tools to scan for known vulnerabilities
-- Manually review code for potential entry points
-- Focus on input validation and data flow analysis

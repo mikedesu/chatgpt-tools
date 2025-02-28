@@ -1,1 +1,0 @@
-Security policies and procedures provide a structured framework for managing security risks, ensuring consistent practices across the organization, and demonstrating compliance with regulatory requirements, thereby maintaining a strong security posture.

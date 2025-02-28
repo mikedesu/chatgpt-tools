@@ -1,1 +1,0 @@
-Attackers exploit XSS by injecting malicious scripts into web pages, using techniques like stored, reflected, or DOM-based XSS to steal data or hijack sessions. Developers can prevent XSS by validating and sanitizing user inputs, implementing Content Security Policy (CSP), and encoding output to prevent script execution.

@@ -1,1 +1,0 @@
-Using the correct HTTP methods in RESTful APIs is crucial for maintaining integrity and consistency in API operations.

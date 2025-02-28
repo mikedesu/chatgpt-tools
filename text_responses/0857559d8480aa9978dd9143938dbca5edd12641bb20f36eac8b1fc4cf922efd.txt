@@ -1,1 +1,0 @@
-how can developers protect against sql injection attacks in web applications by properly sanitizing user inputs to prevent malicious sql queries being executed by attackers?

@@ -1,1 +1,0 @@
-Developers can protect against XSS attacks by implementing proper input validation and output encoding, using Content Security Policy (CSP), and employing frameworks that automatically escape output; best practices include sanitizing all user inputs, using HttpOnly and Secure flags for cookies, and regularly updating and patching software to address known vulnerabilities.

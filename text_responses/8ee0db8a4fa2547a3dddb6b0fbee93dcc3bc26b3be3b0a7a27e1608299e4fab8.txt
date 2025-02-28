@@ -1,1 +1,0 @@
-Buffer overflow attacks occur when more data is written to a buffer than it can hold, overwriting adjacent memory and potentially allowing malicious code execution. To prevent them, use safe programming practices like bounds checking, secure coding standards, and tools like Address Space Layout Randomization (ASLR) and Data Execution Prevention (DEP).

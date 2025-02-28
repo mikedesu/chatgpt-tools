@@ -1,1 +1,0 @@
-RESTful APIs use HTTP methods to interact with resources, following a stateless, client-server model to enable communication between different software systems.

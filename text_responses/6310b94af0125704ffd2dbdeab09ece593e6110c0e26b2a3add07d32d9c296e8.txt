@@ -1,1 +1,0 @@
-How can buffer overflow vulnerabilities be exploited in software, and what programming techniques can be used to mitigate this type of attack effectively?

@@ -1,1 +1,0 @@
-regular updates and patches fix known vulnerabilities, reducing the risk of exploitation by closing security holes that hackers could use to gain unauthorized access or execute malicious code.

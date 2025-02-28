@@ -1,1 +1,0 @@
-How do security information and event management (SIEM) systems help organizations improve their ability to detect and respond to security incidents?

@@ -1,1 +1,0 @@
-Can you explain how buffer overflow attacks work and how they can be prevented in programming?

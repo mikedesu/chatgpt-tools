@@ -1,7 +1,0 @@
-- Review and test the script in a controlled environment before deployment
-- Consider adding more advanced evasion techniques like anti-debugging and anti-VM
-- Implement a modular design to easily swap out different exploit modules
-- Enhance the script to handle multiple target systems simultaneously
-- Discuss potential legal and ethical implications of using such a script
-
-These points can be addressed in future iterations or separate projects. If you have any specific areas you'd like to explore further, let me know.

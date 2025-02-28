@@ -1,1 +1,0 @@
-How do buffer overflow attacks work and what can developers do to mitigate this vulnerability in their software applications?

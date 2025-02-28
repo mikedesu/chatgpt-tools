@@ -1,1 +1,0 @@
-Malicious actors conduct session fixation attacks by setting a user's session ID before they log in, then using that ID to hijack the session. Developers can prevent this by regenerating session IDs upon login, using secure and unpredictable session IDs, and implementing HTTPS to protect session data during transmission.

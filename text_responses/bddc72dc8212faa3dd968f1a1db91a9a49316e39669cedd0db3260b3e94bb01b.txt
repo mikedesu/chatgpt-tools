@@ -1,1 +1,0 @@
-Do you understand the goal of finding and exploiting a Remote Code Execution (RCE) vulnerability?

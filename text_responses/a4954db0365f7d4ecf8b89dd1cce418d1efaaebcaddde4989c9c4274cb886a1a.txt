@@ -1,1 +1,0 @@
-What are some common methods used by attackers to exploit directory traversal vulnerabilities in software applications, and how can developers effectively prevent directory traversal attacks in their code?

@@ -1,1 +1,0 @@
-Key considerations include identifying critical assets and processes, establishing clear recovery time objectives (RTOs) and recovery point objectives (RPOs), regularly testing the plan, and ensuring off-site data backups to maintain operations during and after cyber incidents.

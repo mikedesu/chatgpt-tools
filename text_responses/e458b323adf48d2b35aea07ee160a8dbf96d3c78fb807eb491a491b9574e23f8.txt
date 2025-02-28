@@ -1,1 +1,0 @@
-That's correct, and remember, each HTTP method corresponds to a specific action: GET retrieves data, POST creates new data, PUT updates existing data, and DELETE removes data.

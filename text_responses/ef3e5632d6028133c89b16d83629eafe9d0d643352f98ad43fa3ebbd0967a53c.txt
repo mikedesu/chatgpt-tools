@@ -1,1 +1,0 @@
-Organizations can protect sensitive data on mobile devices by implementing full-disk encryption to secure data at rest and using secure communication apps with end-to-end encryption for data in transit, ensuring that only authorized users can access the information.

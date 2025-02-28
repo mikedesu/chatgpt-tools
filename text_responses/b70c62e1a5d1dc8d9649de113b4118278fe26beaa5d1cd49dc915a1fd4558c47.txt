@@ -1,1 +1,0 @@
-Attackers conduct session fixation by setting a user's session ID before they log in, then using that ID to hijack the session. Developers can prevent session fixation by regenerating session IDs upon login, using secure and unpredictable session IDs, and implementing HTTPS to protect session data during transmission.

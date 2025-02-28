@@ -1,1 +1,0 @@
-Under what circumstances would you use a SQL injection attack in a penetration test?

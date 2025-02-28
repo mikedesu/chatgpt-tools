@@ -1,1 +1,0 @@
-XSS attacks allow hackers to inject malicious scripts into web pages viewed by other users, potentially stealing data or hijacking sessions. To prevent XSS, always validate and sanitize user inputs, use Content Security Policy (CSP), and encode output to prevent script execution.

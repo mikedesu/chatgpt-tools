@@ -1,1 +1,0 @@
-Exactly, and they typically use standard HTTP verbs like GET, POST, PUT, DELETE to perform CRUD operations on resources.

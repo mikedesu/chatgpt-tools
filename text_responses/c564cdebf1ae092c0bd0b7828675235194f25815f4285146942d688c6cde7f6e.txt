@@ -1,1 +1,0 @@
-Attackers exploit clickjacking by overlaying invisible or disguised elements on a web page to trick users into clicking unintended actions. Developers can protect against clickjacking by implementing the X-Frame-Options header, using Content Security Policy (CSP) with frame-ancestors, and ensuring user interactions are confirmed through multi-step verifications.

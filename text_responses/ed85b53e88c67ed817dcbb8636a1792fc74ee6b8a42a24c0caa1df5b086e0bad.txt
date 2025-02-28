@@ -1,1 +1,0 @@
-How can man-in-the-middle (MITM) attacks be carried out, and what encryption protocols or techniques can be used to prevent them effectively in network communications?

@@ -1,1 +1,0 @@
-Attackers exploit XXE vulnerabilities by injecting malicious XML entities to access local files or execute remote requests, often through techniques like entity expansion or remote entity inclusion. Developers can protect against XXE by disabling external entity processing in XML parsers, using whitelisting for allowed entities, and thoroughly validating all XML inputs.

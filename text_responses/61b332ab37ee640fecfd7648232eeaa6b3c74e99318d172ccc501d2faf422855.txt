@@ -1,1 +1,0 @@
-Organizations can mitigate social engineering risks by regularly training employees to recognize tactics like pretexting and phishing, fostering a culture of security awareness, and implementing strict verification protocols for information requests.

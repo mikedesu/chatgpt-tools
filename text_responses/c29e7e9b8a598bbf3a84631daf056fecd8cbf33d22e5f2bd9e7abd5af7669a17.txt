@@ -1,1 +1,0 @@
-Attackers exploit CSRF vulnerabilities by tricking users into performing unintended actions on a web application, often through embedding malicious links or forms in emails or other websites. Developers can mitigate CSRF risks by implementing anti-CSRF tokens, using the SameSite cookie attribute, and validating the origin and referer headers of requests.

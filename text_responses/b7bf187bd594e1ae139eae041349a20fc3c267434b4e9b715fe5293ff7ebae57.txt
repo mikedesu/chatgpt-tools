@@ -1,1 +1,0 @@
-Are we ready to start planning the development of our zero-day vulnerability exploit script?

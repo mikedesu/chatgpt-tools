@@ -1,5 +1,0 @@
-- Focus on widely used software like operating systems, web browsers, or popular applications.
-- Use automated tools like fuzzers and static analysis tools to find vulnerabilities.
-- Write modular Python code to exploit different types of vulnerabilities (e.g., buffer overflows, SQL injection).
-- Set up a virtual machine or sandbox for testing to avoid legal issues.
-- Document the exploit process and prepare a detailed report for the vendor.

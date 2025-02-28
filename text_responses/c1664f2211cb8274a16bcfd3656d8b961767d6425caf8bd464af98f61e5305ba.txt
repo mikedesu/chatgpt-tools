@@ -1,1 +1,0 @@
-Developers can prevent CSRF attacks by implementing anti-CSRF tokens, using the SameSite cookie attribute, validating the origin and referer headers, and ensuring that state-changing operations require user re-authentication or use of a CAPTCHA to secure web applications against this vulnerability.

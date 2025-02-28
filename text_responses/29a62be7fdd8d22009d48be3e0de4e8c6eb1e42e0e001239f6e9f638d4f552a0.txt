@@ -1,1 +1,0 @@
-Attackers exploit LDAP injection by injecting malicious LDAP queries to manipulate data or bypass authentication, often using techniques like filter injection or search filter manipulation. Developers can prevent LDAP injection by using parameterized queries, validating and sanitizing user inputs, and implementing least privilege access for LDAP operations.

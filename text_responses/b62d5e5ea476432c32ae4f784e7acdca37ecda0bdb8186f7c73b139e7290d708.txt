@@ -1,1 +1,0 @@
-How can a distributed denial-of-service (DDoS) attack impact a network or a website?

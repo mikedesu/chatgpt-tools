@@ -1,1 +1,0 @@
-Yes, RESTful APIs follow CRUD operations using standard HTTP verbs like GET, POST, PUT, DELETE to interact with resources.

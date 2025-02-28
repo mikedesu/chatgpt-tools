@@ -1,5 +1,0 @@
-- Use reverse shells like netcat or meterpreter
-- Employ payload delivery tools like msfvenom
-- Utilize social engineering for initial access
-- Leverage existing vulnerabilities with tools like exploit-db
-- Implement obfuscation techniques to evade detection

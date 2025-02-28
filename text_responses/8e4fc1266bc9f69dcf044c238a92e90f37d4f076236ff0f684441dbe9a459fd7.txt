@@ -1,1 +1,0 @@
-to mitigate buffer overflow attacks in c, use secure coding practices like bounds checking with functions like strncpy instead of strcpy, implement stack canaries to detect stack smashing, and enable address space layout randomization (aslr) to make attacks less predictable.

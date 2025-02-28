@@ -1,1 +1,0 @@
-Buffer overflow vulnerabilities can be exploited by overwriting adjacent memory with malicious code, allowing attackers to execute arbitrary commands. To mitigate these attacks, use safe programming languages, implement bounds checking, and employ techniques like Address Space Layout Randomization (ASLR) and Data Execution Prevention (DEP).

@@ -1,1 +1,0 @@
-Multi-factor authentication (MFA) enhances security by requiring multiple forms of verification, making it significantly harder for attackers to gain unauthorized access even if they compromise one factor, like a password.

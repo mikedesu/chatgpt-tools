@@ -1,1 +1,0 @@
-A DNS spoofing attack involves manipulating DNS responses to redirect users to malicious sites by corrupting the DNS cache or intercepting DNS queries; to protect against it, use DNSSEC for DNS response validation, implement DNS over HTTPS (DoH) or DNS over TLS (DoT), regularly update and patch DNS servers, and use secure DNS resolvers that are less susceptible to poisoning.

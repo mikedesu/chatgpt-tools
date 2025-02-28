@@ -1,1 +1,0 @@
-Key principles of ethical hacking include obtaining permission, maintaining confidentiality, and reporting vulnerabilities responsibly. These practices benefit organizations by allowing them to identify and fix security weaknesses proactively, thereby enhancing their overall security posture.
