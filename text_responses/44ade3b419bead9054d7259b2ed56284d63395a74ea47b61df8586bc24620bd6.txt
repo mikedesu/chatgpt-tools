@@ -1,0 +1,1 @@
+Common techniques include SQL injection to manipulate database queries, phishing to steal credentials, and brute force attacks to guess passwords.

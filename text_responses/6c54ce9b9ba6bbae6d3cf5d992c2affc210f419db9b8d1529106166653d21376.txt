@@ -1,0 +1,1 @@
+What are some common methods used by attackers to exploit SQL injection vulnerabilities in web applications, and how can developers effectively mitigate these risks in their code?

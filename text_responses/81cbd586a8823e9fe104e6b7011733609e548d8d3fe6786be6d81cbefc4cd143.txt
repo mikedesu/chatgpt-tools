@@ -1,0 +1,1 @@
+A firewall acts as a barrier between your computer or network and the internet, monitoring and controlling incoming and outgoing traffic based on predetermined security rules to prevent unauthorized access and protect against threats.

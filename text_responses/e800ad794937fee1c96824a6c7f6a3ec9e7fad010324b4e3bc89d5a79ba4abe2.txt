@@ -1,0 +1,5 @@
+- Parsing vulnerabilities in HTTP request handling
+- Misconfigurations in .htaccess files
+- Buffer overflows in modules like mod_php or mod_ssl
+- Insecure directory traversal leading to file inclusion
+- Vulnerabilities in server-side scripting languages integrated with Apache

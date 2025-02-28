@@ -1,0 +1,1 @@
+What are the common methods used by hackers to exploit directory traversal vulnerabilities in web applications, and how can developers effectively prevent directory traversal attacks in their code?

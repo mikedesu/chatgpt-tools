@@ -1,0 +1,1 @@
+How would you like to enhance the script to include manual code review for potential entry points in the target software after the automated scan?

@@ -1,0 +1,1 @@
+How can developers protect their web applications from clickjacking attacks, and what are some common techniques used by attackers to exploit clickjacking vulnerabilities?

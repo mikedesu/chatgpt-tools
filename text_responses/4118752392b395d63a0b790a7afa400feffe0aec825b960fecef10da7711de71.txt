@@ -1,0 +1,1 @@
+SIEM systems aggregate and analyze log data from various sources in real-time, enabling organizations to detect anomalies, correlate events, and respond quickly to security incidents by providing actionable insights and alerts.

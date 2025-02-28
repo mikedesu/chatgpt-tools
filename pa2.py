@@ -1,6 +1,5 @@
 import os
-
-# import openai
+import openai
 from openai import OpenAI
 import sys
 import json
@@ -168,18 +167,16 @@ def init_client(provider):
 
 
 def main():
-    provider = "xai"
-
-    messages = []
-    model = sys.argv[1]
-    client = init_client(provider)
-    prompt = initialize_prompt(sys.argv[2])
-    messages = [create_chat_message("system", prompt)]
+    p = "xai"
+    m = []
+    c = init_client(p)
+    a = sys.argv
+    m = [create_chat_message("system", initialize_prompt(a[2]))]
     try:
-        main_loop(client, model, messages)
+        main_loop(c, a[1], m)
     except KeyboardInterrupt:
         print("\nExiting...")
-        log_chat(messages)
+        log_chat(m)
     print_avg_response_time()
 
 

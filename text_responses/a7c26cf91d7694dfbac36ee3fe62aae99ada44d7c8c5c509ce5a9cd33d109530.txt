@@ -1,0 +1,15 @@
+- Identify target systems and software
+- Gather information on system architecture
+- Analyze software components and dependencies
+- Use fuzzing tools to test for unexpected inputs
+- Implement static code analysis to find potential vulnerabilities
+- Employ dynamic analysis to observe runtime behavior
+- Search for common vulnerability patterns in the code
+- Test for known vulnerabilities that may be unpatched
+- Develop custom exploits based on discovered weaknesses
+- Continuously monitor for new system behaviors or patches
+- Automate the vulnerability discovery process
+- Document findings and potential exploit methods
+- Test exploits in a controlled environment
+- Refine exploits for reliability and stealth
+- Prepare for deployment of the exploit

@@ -1,0 +1,1 @@
+Can you explain how a DNS spoofing attack works and what measures can be taken to protect against it in a network environment?

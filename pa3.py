@@ -1,6 +1,5 @@
 import os
-
-# import openai
+import openai
 from openai import OpenAI
 import sys
 import json
@@ -24,11 +23,9 @@ def calculate_average_response_time():
     return sum(response_times) / len(response_times)
 
 
-def initialize_prompt(filename):
-    with open(filename, "r") as f:
-        prompt = f.read()
-    prompt = "".join(prompt.splitlines())
-    return prompt
+def initialize_prompt(f):
+    with open(f, "r") as r:
+        return "".join(r.read().splitlines())
 
 
 def create_chat_message(role, content):
@@ -62,25 +59,21 @@ def send_message(client, model, messages):
                 sleep(1)
 
 
-def log_chat(messages, chatlog_dir="chatlogs"):
-    index = 0
-    # verify directory exists
-    if not os.path.exists(chatlog_dir):
-        os.makedirs(chatlog_dir)
-    filename = os.path.join(chatlog_dir, f"chatlog{index}.json")
-    while os.path.exists(filename):
-        index += 1
-        filename = os.path.join(chatlog_dir, f"chatlog{index}.json")
-    with open(filename, "w") as f:
-        rich.print("[bold purple]Info[/bold purple]: writing chatlog to", filename)
-        f.write(json.dumps(messages, indent=4))
+def log_chat(m, d="chatlogs"):
+    os.makedirs(d, exist_ok=True)
+    i = 0
+    f = os.path.join(d, f"chatlog{i}.json")
+    while os.path.exists(f):
+        i += 1
+        f = os.path.join(d, f"chatlog{i}.json")
+    with open(f, "w") as o:
+        print("Info: writing chatlog to", f)
+        o.write(json.dumps(m, indent=4))
 
 
-def print_token_count(messages):
-    token_count = 0
-    for msg in messages:
-        token_count += len(msg["content"])
-    rich.print("[bold purple]Info[/bold purple]: current tokens used:", token_count)
+def print_token_count(m):
+    t = sum(len(msg["content"]) for msg in m)
+    rich.print(f"Info: current tokens used: {t}")
 
 
 def print_num_messages(messages):
@@ -154,32 +147,38 @@ def print_avg_response_time():
     rich.print(outstr)
 
 
+def init_xai_client():
+    return OpenAI(
+        api_key=os.getenv("XAI_API_KEY"),
+        base_url="https://api.x.ai/v1",
+    )
+
+
+def init_openai_client():
+    return OpenAI(
+        api_key=os.getenv("OPENAI_API_KEY"),
+        organization=os.getenv("OPENAI_ORG"),
+    )
+
+
 def init_client(provider):
     if provider == "xai":
-        return OpenAI(
-            api_key=os.getenv("XAI_API_KEY"),
-            base_url="https://api.x.ai/v1",
-        )
+        return init_xai_client()
     elif provider == "openai":
-        return OpenAI(
-            api_key=os.getenv("OPENAI_API_KEY"),
-            organization=os.getenv("OPENAI_ORG"),
-        )
+        return init_openai_client()
 
 
 def main():
-    provider = "xai"
-
-    messages = []
-    model = sys.argv[1]
-    client = init_client(provider)
-    prompt = initialize_prompt(sys.argv[2])
-    messages = [create_chat_message("system", prompt)]
+    p = "xai"
+    m = []
+    c = init_client(p)
+    a = sys.argv
+    m = [create_chat_message("system", initialize_prompt(a[2]))]
     try:
-        main_loop(client, model, messages)
+        main_loop(c, a[1], m)
     except KeyboardInterrupt:
         print("\nExiting...")
-        log_chat(messages)
+        log_chat(m)
     print_avg_response_time()
 
 

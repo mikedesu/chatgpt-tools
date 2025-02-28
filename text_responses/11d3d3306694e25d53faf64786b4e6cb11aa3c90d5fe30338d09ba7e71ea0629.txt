@@ -1,0 +1,1 @@
+Common data protection measures include encryption of data at rest and in transit, implementing strict access controls, regular data backups, and using data loss prevention (DLP) tools to monitor and prevent unauthorized data transfers.

@@ -1,0 +1,1 @@
+Attackers exploit insecure deserialization by manipulating serialized data to inject malicious objects or execute arbitrary code, often through techniques like object injection or type confusion. Developers can prevent these vulnerabilities by using secure serialization formats, implementing integrity checks, and validating input data before deserialization.

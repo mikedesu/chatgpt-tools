@@ -1,0 +1,1 @@
+Network segmentation enhances security by isolating different parts of the network, limiting lateral movement of threats, and reducing the attack surface, thereby making it harder for attackers to compromise the entire network.

@@ -1,0 +1,1 @@
+How can a reverse shell be utilized by attackers in a penetration testing scenario, and what safeguards can be implemented to prevent unauthorized usage of reverse shells in a network?

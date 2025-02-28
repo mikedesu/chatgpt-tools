@@ -1,0 +1,1 @@
+MITM attacks can be executed by intercepting and altering communication between two parties, often through techniques like ARP spoofing or DNS hijacking. To prevent them, use end-to-end encryption protocols like TLS/SSL, implement mutual authentication, and utilize VPNs for secure network communications.

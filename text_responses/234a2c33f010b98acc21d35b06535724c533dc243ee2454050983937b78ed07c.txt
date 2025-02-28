@@ -1,0 +1,1 @@
+Hackers exploit buffer overflows by overwriting memory with malicious code, often using techniques like stack smashing or heap spraying. To prevent these attacks, use safe programming languages, implement bounds checking, and employ security measures like Address Space Layout Randomization (ASLR) and Data Execution Prevention (DEP).

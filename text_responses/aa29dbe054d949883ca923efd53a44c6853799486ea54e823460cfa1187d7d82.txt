@@ -1,0 +1,1 @@
+Developers can prevent session hijacking by implementing secure session management practices such as using HTTPS, regenerating session IDs after login, setting appropriate session timeouts, and storing session data server-side rather than in cookies.

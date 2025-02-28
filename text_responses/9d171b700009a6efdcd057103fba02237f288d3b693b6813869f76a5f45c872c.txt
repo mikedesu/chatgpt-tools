@@ -1,0 +1,1 @@
+How can encryption and hashing algorithms enhance the security of data stored in databases and transmitted over networks?

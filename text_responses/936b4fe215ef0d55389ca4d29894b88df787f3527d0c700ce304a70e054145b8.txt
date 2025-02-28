@@ -1,0 +1,19 @@
+- Import necessary modules
+- Define target software and scan command
+- Use `os.system` to run the scan
+- Parse and display results
+
+Here's a basic script to get started:
+
+```python
+import os
+
+# Define target and scan command
+target = "192.168.1.1"
+scan_cmd = f"nmap -sV -O {target}"
+
+# Run the scan
+os.system(scan_cmd)
+
+# Note: Parsing nmap output would require additional libraries or processing
+```

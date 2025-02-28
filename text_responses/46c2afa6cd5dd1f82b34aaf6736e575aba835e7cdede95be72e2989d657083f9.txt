@@ -1,0 +1,1 @@
+Ensuring proper use of HTTP methods in RESTful APIs helps maintain a clear and predictable API structure.

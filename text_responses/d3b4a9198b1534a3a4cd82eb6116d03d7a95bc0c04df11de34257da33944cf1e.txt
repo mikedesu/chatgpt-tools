@@ -1,0 +1,1 @@
+Hackers carry out XXE attacks by injecting malicious XML entities that can access local files or execute remote requests, often exploiting parsers that process external entities. To protect web applications, disable external entity processing in XML parsers, use whitelisting for allowed entities, and validate all XML inputs thoroughly.

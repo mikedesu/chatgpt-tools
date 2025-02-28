@@ -1,0 +1,1 @@
+How can session hijacking attacks be conducted, and what measures can be implemented to protect web applications from such attacks effectively?

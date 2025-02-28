@@ -1,0 +1,1 @@
+How can programmers validate and sanitize user input to prevent SQL injection attacks when developing web applications?

@@ -1,0 +1,1 @@
+I'd like to learn more about how SQL injection attacks work and how to prevent them effectively.

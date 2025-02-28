@@ -1,0 +1,1 @@
+A SQL injection attack involves inserting malicious SQL code into a query, exploiting improper input validation to manipulate database operations or extract data. Prevention involves using prepared statements, input validation, and least privilege access to databases.

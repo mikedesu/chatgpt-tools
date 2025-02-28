@@ -1,0 +1,1 @@
+In penetration testing, attackers use reverse shells to gain remote access to a compromised system by having it connect back to the attacker's machine. To prevent unauthorized reverse shells, implement network intrusion detection systems, use application whitelisting, and regularly monitor and analyze network traffic for unusual outgoing connections.

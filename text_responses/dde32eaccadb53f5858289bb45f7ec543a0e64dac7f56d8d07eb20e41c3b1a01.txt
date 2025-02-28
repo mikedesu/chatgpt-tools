@@ -1,0 +1,1 @@
+Encryption transforms data into an unreadable format using algorithms and keys, ensuring that only authorized users with the correct decryption key can access the sensitive information.

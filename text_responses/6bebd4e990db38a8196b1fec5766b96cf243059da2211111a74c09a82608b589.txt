@@ -1,0 +1,1 @@
+Hackers often use techniques like UNION attacks, boolean-based blind SQL injection, and error-based SQL injection to exploit vulnerabilities; developers can protect against these by using parameterized queries, prepared statements, and input validation to sanitize user inputs.

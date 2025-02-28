@@ -1,6 +1,5 @@
 import os
-
-# import openai
+import openai
 from openai import OpenAI
 import sys
 import json
@@ -10,12 +9,12 @@ from datetime import datetime
 from time import sleep
 
 
-# provider = "openai"
-provider = "xai"
-model = None
-prompt = None
+client = OpenAI(
+    api_key=os.getenv("OPENAI_API_KEY"), organization=os.getenv("OPENAI_ORG")
+)
 
 response_times = []
+messages = []
 
 
 def calculate_average_response_time():
@@ -31,11 +30,27 @@ def initialize_prompt(filename):
     return prompt
 
 
+def initialize_openai():
+    # TODO: The 'openai.organization' option isn't read in the client API. You will need to pass it when you instantiate the client, e.g. 'OpenAI(organization=os.getenv('OPENAI_ORG'))'
+    # openai.organization = os.getenv('OPENAI_ORG')
+    model = sys.argv[1]
+    # print("model:", model)
+    if "gpt-3.5-16k" in model or "gpt3.5-16k" in model or "gpt3.516k" in model:
+        return "gpt-3.5-turbo-16k"
+    if "gpt-3.5" in model or "gpt3.5" in model or "gpt3" in model or "gpt-3" in model:
+        return "gpt-3.5-turbo"
+    if "gpt-4" in model or "gpt4" in model:
+        return "gpt-4-1106-preview"
+    # error out
+    rich.print("[bold red]Error[/bold red]: invalid model")
+    sys.exit(1)
+
+
 def create_chat_message(role, content):
     return {"role": role, "content": content}
 
 
-def send_message(client, model, messages):
+def send_message(model, messages):
     t0 = datetime.now()
     while True:
         try:
@@ -44,14 +59,18 @@ def send_message(client, model, messages):
             tdiff = t1 - t0
             response_times.append(tdiff.total_seconds())
             # print("[bold purple]Info[/bold purple]: message sent in", tdiff.total_seconds(), "seconds")
-            # make sure result.choices is not empty
-            if len(result.choices) == 0:
-                raise Exception("result.choices is empty")
-            # make sure message is not empty
-            if result.choices[0].message.content == "":
-                raise Exception("result.choices[0].message.content is empty")
-            # return the response
             return result.choices[0].message.content
+        except openai.ServiceUnavailableError as e:
+            rich.print("[bold red]Error[/bold red]: ", e)
+            exit(1)
+        except InvalidRequestError as e:
+            rich.print("[bold red]Error[/bold red]: ", e)
+            sleep_time = 5
+            for i in range(sleep_time):
+                rich.print(
+                    f"[bold purple]Info[/bold purple]: sleeping for {sleep_time-i} seconds..."
+                )
+                sleep(1)
         except Exception as e:
             rich.print("[bold red]Error[/bold red]: ", e)
             sleep_time = 5
@@ -87,14 +106,14 @@ def print_num_messages(messages):
     rich.print("[bold purple]Info[/bold purple]: current messages:", len(messages))
 
 
-def print_response(model, response):
-    rich.print(f"[bold green]{model}[/bold green]:", response, "\n")
+def print_response(response):
+    rich.print("[bold blue]ChatGPT[/bold blue]:", response, "\n")
 
 
-def main_loop(client, model, messages):
-    response = send_message(client, model, messages)
+def main_loop(model, messages):
+    response = send_message(model, messages)
     messages.append(create_chat_message("assistant", response))
-    print_response(model, response)
+    print_response(response)
     while True:
         lines = []
         rich.print("[bold]You[/bold]: ", end="")
@@ -115,7 +134,6 @@ def main_loop(client, model, messages):
             if input_msg == "" and one_newline_entered == True:
                 double_newline_entered = True
         input_msg = "\n".join(lines).strip()
-        rich.print("--------------------")
         if input_msg in ("exit", "quit"):
             break
         if input_msg in ("clear", "cls", "c"):
@@ -131,9 +149,9 @@ def main_loop(client, model, messages):
                 f.write(messages[-1]["content"])
             continue
         messages.append(create_chat_message("user", input_msg))
-        response = send_message(client, model, messages)
+        response = send_message(model, messages)
         messages.append(create_chat_message("assistant", response))
-        print_response(model, response)
+        print_response(response)
         # print_token_count(messages)
         # print_num_messages(messages)
         # print_avg_response_time()
@@ -154,33 +172,26 @@ def print_avg_response_time():
     rich.print(outstr)
 
 
-def init_client(provider):
-    if provider == "xai":
-        return OpenAI(
-            api_key=os.getenv("XAI_API_KEY"),
-            base_url="https://api.x.ai/v1",
-        )
-    elif provider == "openai":
-        return OpenAI(
-            api_key=os.getenv("OPENAI_API_KEY"),
-            organization=os.getenv("OPENAI_ORG"),
-        )
+def signal_handler(sig, frame):
+    print()
+    log_chat(messages)
+    print_avg_response_time()
+    sys.exit(0)
 
 
 def main():
-    provider = "xai"
-
-    messages = []
-    model = sys.argv[1]
-    client = init_client(provider)
-    prompt = initialize_prompt(sys.argv[2])
+    global messages
+    signal.signal(signal.SIGINT, signal_handler)  # ctrl-c
+    check_usage()
+    prompt_filename = sys.argv[2]
+    prompt = initialize_prompt(prompt_filename)
+    model = initialize_openai()
     messages = [create_chat_message("system", prompt)]
     try:
-        main_loop(client, model, messages)
-    except KeyboardInterrupt:
-        print("\nExiting...")
-        log_chat(messages)
-    print_avg_response_time()
+        response = send_message(model, messages)
+        print(response)
+    except Exception as e:
+        rich.print("[bold red]Error[/bold red]: ", e)
 
 
 if __name__ == "__main__":

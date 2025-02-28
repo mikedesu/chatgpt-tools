@@ -1,0 +1,1 @@
+What techniques can attackers use to exploit cross-site scripting (XSS) vulnerabilities in web applications, and what best practices can developers follow to prevent XSS attacks effectively?

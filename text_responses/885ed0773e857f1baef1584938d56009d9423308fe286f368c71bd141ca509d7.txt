@@ -1,0 +1,1 @@
+A DDoS attack can overwhelm a network or website with excessive traffic, causing service disruptions, slow performance, or complete unavailability, significantly impacting user access and potentially leading to financial losses.

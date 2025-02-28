@@ -1,0 +1,1 @@
+How can cross-site scripting (XSS) attacks be used by hackers to compromise web applications, and what measures can be taken to prevent them effectively?

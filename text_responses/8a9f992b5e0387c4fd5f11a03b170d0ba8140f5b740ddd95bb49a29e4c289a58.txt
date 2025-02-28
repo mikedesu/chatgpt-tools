@@ -1,0 +1,1 @@
+How can a cross-site scripting (XSS) attack be used to steal sensitive information from users of a website?

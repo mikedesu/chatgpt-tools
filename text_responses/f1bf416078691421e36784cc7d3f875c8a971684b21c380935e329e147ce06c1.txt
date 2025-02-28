@@ -1,0 +1,1 @@
+Common social engineering techniques include pretexting, where attackers create a fabricated scenario to gain trust; baiting, using false promises to lure victims; and tailgating, physically following authorized personnel to gain access to restricted areas.

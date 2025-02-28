@@ -1,0 +1,1 @@
+Common methods to detect and prevent phishing include using email filters to identify suspicious emails, educating users to recognize phishing signs like misspelled URLs or urgent requests, and implementing two-factor authentication to add an extra layer of security.

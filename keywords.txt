@@ -1,0 +1,1 @@
+make a list of tags for youtube live streams. gamer playing stardew valley on the nintendo switch. tags should be strings containing no spaces. for example: stardew, valley, stardewvalley. be exhaustive. use as many words as possible.

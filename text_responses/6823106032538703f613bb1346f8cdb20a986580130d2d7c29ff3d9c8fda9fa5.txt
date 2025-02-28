@@ -1,0 +1,1 @@
+Yes, each HTTP method in RESTful APIs corresponds to a specific action: GET retrieves data, POST creates new data, PUT updates existing data, and DELETE removes data.

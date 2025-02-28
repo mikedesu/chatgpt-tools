@@ -1,0 +1,1 @@
+What is a man-in-the-middle attack and how can developers secure communications to prevent against this type of attack in their web applications?
