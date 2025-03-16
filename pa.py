@@ -1,13 +1,15 @@
 import os
-import openai
+
+# import openai
 from openai import OpenAI
 import sys
 import json
 import rich
-import signal
+
+# import signal
 from datetime import datetime
 from time import sleep
-
+import tiktoken
 
 # provider = "openai"
 # provider = "xai"
@@ -16,6 +18,8 @@ from time import sleep
 # prompt = None
 
 response_times = []
+
+token_checker = tiktoken.encoding_for_model("gpt-4o")
 
 
 def calculate_average_response_time():
@@ -92,6 +96,7 @@ def print_response(model, response):
 
 
 def main_loop(client, model, messages):
+    prompt = messages[-1]["content"]
     response = send_message(client, model, messages)
     messages.append(create_chat_message("assistant", response))
     print_response(model, response)
@@ -130,6 +135,14 @@ def main_loop(client, model, messages):
             with open(filename, "w") as f:
                 f.write(messages[-1]["content"])
             continue
+
+        # print estimated token count
+        tokens = token_checker.encode(input_msg)
+        token_count = len(tokens)
+        rich.print(
+            f"[bold purple]Info[/bold purple]: estimated tokens used: {token_count}"
+        )
+
         messages.append(create_chat_message("user", input_msg))
         response = send_message(client, model, messages)
         messages.append(create_chat_message("assistant", response))
@@ -140,9 +153,13 @@ def main_loop(client, model, messages):
     log_chat(messages)
 
 
+def print_usage():
+    print("Usage: python3 pa.py <provider> <model> <prompt_filepath>")
+
+
 def check_usage():
-    if len(sys.argv) != 3:
-        print("Usage: python3 pa.py <model> <prompt_filepath>")
+    if len(sys.argv) != 4:
+        print_usage()
         sys.exit(1)
 
 
@@ -175,14 +192,18 @@ def init_client(provider):
 
 def main():
     # global provi
-    provider = "xai"
+    # provider = "xai"
     # provider = "llama"
     # provider = "openai"
 
+    check_usage()
+
+    provider = sys.argv[1]
+
     messages = []
-    model = sys.argv[1]
+    model = sys.argv[2]
     client = init_client(provider)
-    prompt = initialize_prompt(sys.argv[2])
+    prompt = initialize_prompt(sys.argv[3])
     messages = [create_chat_message("system", prompt)]
     try:
         main_loop(client, model, messages)
