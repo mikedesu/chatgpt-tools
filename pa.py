@@ -1,25 +1,17 @@
 import os
-
-# import openai
-from openai import OpenAI
 import sys
 import json
 import rich
-
-# import signal
+import tiktoken
+from openai import OpenAI
 from datetime import datetime
 from time import sleep
-import tiktoken
-
-# provider = "openai"
-# provider = "xai"
-# provider = "llama"
-# model = None
-# prompt = None
 
 response_times = []
 
 token_checker = tiktoken.encoding_for_model("gpt-4o")
+
+total_tokens_this_session = 0
 
 
 def calculate_average_response_time():
@@ -47,7 +39,6 @@ def send_message(client, model, messages):
             t1 = datetime.now()
             tdiff = t1 - t0
             response_times.append(tdiff.total_seconds())
-            # print("[bold purple]Info[/bold purple]: message sent in", tdiff.total_seconds(), "seconds")
             # make sure result.choices is not empty
             if len(result.choices) == 0:
                 raise Exception("result.choices is empty")
@@ -67,17 +58,15 @@ def send_message(client, model, messages):
 
 
 def log_chat(provider, messages, chatlog_dir="chatlogs"):
+    os.makedirs(chatlog_dir, exist_ok=True)  # Create dir if it doesn't  exist
     index = 0
-    # verify directory exists
-    if not os.path.exists(chatlog_dir):
-        os.makedirs(chatlog_dir)
-    filename = os.path.join(chatlog_dir, f"chatlog-{provider}-{index}.json")
-    while os.path.exists(filename):
+    while os.path.exists(
+        filename := os.path.join(chatlog_dir, f"chatlog-{provider}-{index}.json")
+    ):
         index += 1
-        filename = os.path.join(chatlog_dir, f"chatlog-{provider}-{index}.json")
     with open(filename, "w") as f:
-        rich.print("[bold purple]Info[/bold purple]: writing chatlog to", filename)
-        f.write(json.dumps(messages, indent=4))
+        rich.print(f"[bold purple]Info[/bold purple]: writing chatlog to {filename}")
+        json.dump(messages, f, indent=4)
 
 
 def print_token_count(messages):
@@ -96,13 +85,14 @@ def print_response(model, response):
 
 
 def main_loop(provider, client, model, messages):
+    global total_tokens_this_session
     prompt = messages[-1]["content"]
     response = send_message(client, model, messages)
     messages.append(create_chat_message("assistant", response))
     print_response(model, response)
     while True:
         lines = []
-        rich.print("[bold]You[/bold]: ", end="")
+        rich.print("[bold green]You[/bold green]: ", end="")
         input_msg = ""
         try:
             input_msg = input()
@@ -115,12 +105,13 @@ def main_loop(provider, client, model, messages):
         while double_newline_entered == False:
             if input_msg == "":
                 one_newline_entered = True
+            else:
+                one_newline_entered = False
             lines.append(input_msg)
             input_msg = input()
             if input_msg == "" and one_newline_entered == True:
                 double_newline_entered = True
         input_msg = "\n".join(lines).strip()
-        rich.print("--------------------")
         if input_msg in ("exit", "quit"):
             break
         if input_msg in ("clear", "cls", "c"):
@@ -135,16 +126,30 @@ def main_loop(provider, client, model, messages):
             with open(filename, "w") as f:
                 f.write(messages[-1]["content"])
             continue
-
         # print estimated token count
         tokens = token_checker.encode(input_msg)
         token_count = len(tokens)
         rich.print(
-            f"[bold purple]Info[/bold purple]: estimated tokens used: {token_count}"
+            f"[bold purple]Info[/bold purple]: estimated tokens send: {token_count}"
         )
+        total_tokens_this_session += token_count
 
+        rich.print("--------------------")
         messages.append(create_chat_message("user", input_msg))
         response = send_message(client, model, messages)
+
+        # print estimated token count for response
+        tokens = token_checker.encode(response)
+        token_count = len(tokens)
+        rich.print(
+            f"[bold purple]Info[/bold purple]: estimated tokens recv: {token_count}"
+        )
+        total_tokens_this_session += token_count
+        rich.print(
+            f"[bold purple]Info[/bold purple]: total tokens used....: {total_tokens_this_session}"
+        )
+        print()
+
         messages.append(create_chat_message("assistant", response))
         print_response(model, response)
         # print_token_count(messages)
@@ -191,15 +196,8 @@ def init_client(provider):
 
 
 def main():
-    # global provi
-    # provider = "xai"
-    # provider = "llama"
-    # provider = "openai"
-
     check_usage()
-
     provider = sys.argv[1]
-
     messages = []
     model = sys.argv[2]
     client = init_client(provider)
