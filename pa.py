@@ -66,15 +66,15 @@ def send_message(client, model, messages):
                 sleep(1)
 
 
-def log_chat(messages, chatlog_dir="chatlogs"):
+def log_chat(provider, messages, chatlog_dir="chatlogs"):
     index = 0
     # verify directory exists
     if not os.path.exists(chatlog_dir):
         os.makedirs(chatlog_dir)
-    filename = os.path.join(chatlog_dir, f"chatlog{index}.json")
+    filename = os.path.join(chatlog_dir, f"chatlog-{provider}-{index}.json")
     while os.path.exists(filename):
         index += 1
-        filename = os.path.join(chatlog_dir, f"chatlog{index}.json")
+        filename = os.path.join(chatlog_dir, f"chatlog-{provider}-{index}.json")
     with open(filename, "w") as f:
         rich.print("[bold purple]Info[/bold purple]: writing chatlog to", filename)
         f.write(json.dumps(messages, indent=4))
@@ -95,7 +95,7 @@ def print_response(model, response):
     rich.print(f"[bold green]{model}[/bold green]:", response, "\n")
 
 
-def main_loop(client, model, messages):
+def main_loop(provider, client, model, messages):
     prompt = messages[-1]["content"]
     response = send_message(client, model, messages)
     messages.append(create_chat_message("assistant", response))
@@ -150,7 +150,7 @@ def main_loop(client, model, messages):
         # print_token_count(messages)
         # print_num_messages(messages)
         # print_avg_response_time()
-    log_chat(messages)
+    log_chat(provider, messages)
 
 
 def print_usage():
@@ -206,10 +206,10 @@ def main():
     prompt = initialize_prompt(sys.argv[3])
     messages = [create_chat_message("system", prompt)]
     try:
-        main_loop(client, model, messages)
+        main_loop(provider, client, model, messages)
     except KeyboardInterrupt:
         print("\nExiting...")
-        log_chat(messages)
+        log_chat(provider, messages)
     print_avg_response_time()
 
 
