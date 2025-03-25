@@ -6,6 +6,8 @@ import tiktoken
 from openai import OpenAI
 from datetime import datetime
 from time import sleep
+from rich.console import Console
+from typing import Any
 
 response_times = []
 
@@ -14,20 +16,23 @@ token_checker = tiktoken.encoding_for_model("gpt-4o")
 total_tokens_this_session = 0
 
 
-def calculate_average_response_time():
-    if len(response_times) == 0:
-        return 0
+def calculate_average_response_time(response_times: list) -> float:
+    if not response_times:
+        return 0.0
     return sum(response_times) / len(response_times)
 
 
-def initialize_prompt(filename):
+def initialize_prompt(filename: str) -> str:
+    """Reads and flattens a prompt file into a single line."""
     with open(filename, "r") as f:
-        prompt = f.read()
-    prompt = "".join(prompt.splitlines())
-    return prompt
+        return f.read().replace("\n", " ").strip()
 
 
-def create_chat_message(role, content):
+# def create_chat_message(role, content):
+#    return {"role": role, "content": content}
+
+
+def create_chat_message(role: str, content: str) -> dict:
     return {"role": role, "content": content}
 
 
@@ -35,7 +40,9 @@ def send_message(client, model, messages):
     t0 = datetime.now()
     while True:
         try:
-            result = client.chat.completions.create(model=model, messages=messages)
+            result = client.chat.completions.create(
+                model=model, messages=messages, stream=False
+            )
             t1 = datetime.now()
             tdiff = t1 - t0
             response_times.append(tdiff.total_seconds())
@@ -69,24 +76,40 @@ def log_chat(provider, messages, chatlog_dir="chatlogs"):
         json.dump(messages, f, indent=4)
 
 
-def print_token_count(messages):
-    token_count = 0
-    for msg in messages:
-        token_count += len(msg["content"])
-    rich.print("[bold purple]Info[/bold purple]: current tokens used:", token_count)
+# def print_token_count(messages):
+#    token_count = 0
+#    for msg in messages:
+#        token_count += len(msg["content"])
+#    rich.print("[bold purple]Info[/bold purple]: current tokens used:", token_count)
 
 
-def print_num_messages(messages):
-    rich.print("[bold purple]Info[/bold purple]: current messages:", len(messages))
+def print_token_count(messages: list) -> None:
+    """Prints total token count from message content."""
+    token_count = sum(len(m["content"]) for m in messages)
+    rich.print(f"[bold purple]Info[bold purple]: current tokens used: {token_count}")
 
 
-def print_response(model, response):
-    rich.print(f"[bold green]{model}[/bold green]:", response, "\n")
+# def print_num_messages(messages):
+#    rich.print("[bold purple]Info[/bold purple]: current messages:", len(messages))
+
+
+def print_num_messages(messages: list) -> None:
+    """Prints the count of messages."""
+    rich.print(f"[bold purple]Info[bold purple]: current messages: {len(messages)}")
+
+
+# def print_response(model, response):
+#    rich.print(f"[bold green]{model}[/bold green]:", response, "\n")
+
+
+def print_response(model: str, response: Any) -> None:
+    """Pretty-prints model responses using rich formatting."""
+    Console().print(f"{model}:", response, "\n")
 
 
 def main_loop(provider, client, model, messages):
     global total_tokens_this_session
-    prompt = messages[-1]["content"]
+    # prompt = messages[-1]["content"]
     response = send_message(client, model, messages)
     messages.append(create_chat_message("assistant", response))
     print_response(model, response)
@@ -114,18 +137,18 @@ def main_loop(provider, client, model, messages):
         input_msg = "\n".join(lines).strip()
         if input_msg in ("exit", "quit"):
             break
-        if input_msg in ("clear", "cls", "c"):
-            messages.clear()
-            messages.append(create_chat_message("system", prompt))
-            continue
-        if input_msg in ("tokens", "t"):
-            print_token_count(messages)
-            continue
-        if input_msg in ("write", "w"):
-            filename = input("filename: ")
-            with open(filename, "w") as f:
-                f.write(messages[-1]["content"])
-            continue
+        # if input_msg in ("clear", "cls", "c"):
+        # messages.clear()
+        # messages.append(create_chat_message("system", prompt))
+        # continue
+        # if input_msg in ("tokens", "t"):
+        #    print_token_count(messages)
+        #    continue
+        # if input_msg in ("write", "w"):
+        #    filename = input("filename: ")
+        #    with open(filename, "w") as f:
+        #        f.write(messages[-1]["content"])
+        #    continue
         # print estimated token count
         tokens = token_checker.encode(input_msg)
         token_count = len(tokens)
@@ -151,7 +174,18 @@ def main_loop(provider, client, model, messages):
         print()
 
         messages.append(create_chat_message("assistant", response))
+
+        if "summarize" in input_msg:
+            # summarize the conversation
+            # we want to keep the first 2 messages and the last 2 messages
+            # and delete the rest
+            updated_messages = messages[:2] + messages[-2:]
+            messages = updated_messages
+            rich.print(f"[bold purple]Info[/bold purple]: {messages}")
+            rich.print("--------------------")
+
         print_response(model, response)
+
         # print_token_count(messages)
         # print_num_messages(messages)
         # print_avg_response_time()
@@ -169,7 +203,7 @@ def check_usage():
 
 
 def print_avg_response_time():
-    secs = calculate_average_response_time()
+    secs = calculate_average_response_time(response_times)
     outstr = (
         f"[bold purple]Info[/bold purple]: average response time is {secs:.2f} seconds"
     )
