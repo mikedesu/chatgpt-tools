@@ -7,6 +7,7 @@ from openai import OpenAI
 from datetime import datetime
 from time import sleep
 from rich.console import Console
+from rich.markdown import Markdown
 from typing import Any
 
 response_times = []
@@ -104,7 +105,10 @@ def print_num_messages(messages: list) -> None:
 
 def print_response(model: str, response: Any) -> None:
     """Pretty-prints model responses using rich formatting."""
-    Console().print(f"{model}:", response, "\n")
+    response += "\n\n-------------------\n"
+    mkdn = Markdown(response)
+    rich.print(f"[bold green]{model}[/bold green]:", mkdn, "\n")
+    # Console().print(f"{model}:", response, "\n")
 
 
 def main_loop(provider, client, model, messages):
@@ -157,7 +161,9 @@ def main_loop(provider, client, model, messages):
         )
         total_tokens_this_session += token_count
 
-        rich.print("--------------------")
+        markdown_hr = Markdown("--------------------")
+        rich.print(markdown_hr)
+
         messages.append(create_chat_message("user", input_msg))
         response = send_message(client, model, messages)
 
@@ -182,7 +188,8 @@ def main_loop(provider, client, model, messages):
             updated_messages = messages[:2] + messages[-2:]
             messages = updated_messages
             rich.print(f"[bold purple]Info[/bold purple]: {messages}")
-            rich.print("--------------------")
+            # rich.print("--------------------")
+            rich.print(markdown_hr)
 
         print_response(model, response)
 
