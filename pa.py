@@ -7,6 +7,7 @@ from openai import OpenAI
 from datetime import datetime
 from time import sleep
 from rich.console import Console
+
 from rich.markdown import Markdown
 from typing import Any
 
@@ -106,8 +107,9 @@ def print_num_messages(messages: list) -> None:
 def print_response(model: str, response: Any) -> None:
     """Pretty-prints model responses using rich formatting."""
     response += "\n\n-------------------\n"
-    mkdn = Markdown(response)
-    rich.print(f"[bold green]{model}[/bold green]:", mkdn, "\n")
+    # mkdn = Markdown(response)
+    # rich.print(f"[bold green]{model}[/bold green]:", mkdn, "\n")
+    rich.print(f"[bold green]{model}[/bold green]:", response, "\n")
     # Console().print(f"{model}:", response, "\n")
 
 
