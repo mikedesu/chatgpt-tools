@@ -58,6 +58,20 @@ def send_message(client, model, messages):
             return result.choices[0].message.content
         except Exception as e:
             rich.print("[bold red]Error[/bold red]: ", e)
+
+            # we never want to see this...
+            # if we do, we need to
+            # 1. prune off the most recent message we added to the messages list
+            # 2. prune off the most recent message we received from the assistant
+            # 3. ask it to summarize everything up to this point
+            # 4. clear the messages list and add the system prompt and summary
+            # if "maximum context length" in str(e):
+            #    rich.print(
+            #        "[bold red]Error[/bold red]: maximum context length exceeded, "
+            #        "please shorten your prompt or conversation history."
+            #    )
+            #    break
+
             sleep_time = 5
             for i in range(sleep_time):
                 rich.print(
@@ -129,46 +143,40 @@ def main_loop(provider, client, model, messages):
             break
         if input_msg in ("exit", "quit"):
             break
-        one_newline_entered = False
-        double_newline_entered = False
-        while double_newline_entered == False:
-            if input_msg == "":
-                one_newline_entered = True
-            else:
-                one_newline_entered = False
-            lines.append(input_msg)
-            input_msg = input()
-            if input_msg == "" and one_newline_entered == True:
-                double_newline_entered = True
-        input_msg = "\n".join(lines).strip()
-        if input_msg in ("exit", "quit"):
-            break
-        # if input_msg in ("clear", "cls", "c"):
-        # messages.clear()
-        # messages.append(create_chat_message("system", prompt))
-        # continue
-        # if input_msg in ("tokens", "t"):
-        #    print_token_count(messages)
-        #    continue
-        # if input_msg in ("write", "w"):
-        #    filename = input("filename: ")
-        #    with open(filename, "w") as f:
-        #        f.write(messages[-1]["content"])
-        #    continue
-        # print estimated token count
+        if input_msg in ("file", "f"):
+            # read from a file
+            rich.print("[bold green]Filepath[/bold green]: ", end="")
+            input_msg = input().strip()
+            with open(input_msg, "r") as f:
+                lines = f.readlines()
+                input_msg = "".join(lines)
+                input_msg = input_msg.strip()
+        else:
+            one_newline_entered = False
+            double_newline_entered = False
+            while double_newline_entered == False:
+                if input_msg == "":
+                    one_newline_entered = True
+                else:
+                    one_newline_entered = False
+                lines.append(input_msg)
+                input_msg = input()
+                if input_msg == "" and one_newline_entered == True:
+                    double_newline_entered = True
+            input_msg = "\n".join(lines)
+            input_msg = input_msg.strip()
+            if input_msg in ("exit", "quit"):
+                break
         tokens = token_checker.encode(input_msg)
         token_count = len(tokens)
         rich.print(
             f"[bold purple]Info[/bold purple]: estimated tokens send: {token_count}"
         )
         total_tokens_this_session += token_count
-
         markdown_hr = Markdown("--------------------")
         rich.print(markdown_hr)
-
         messages.append(create_chat_message("user", input_msg))
         response = send_message(client, model, messages)
-
         # print estimated token count for response
         tokens = token_checker.encode(response)
         token_count = len(tokens)
@@ -180,9 +188,7 @@ def main_loop(provider, client, model, messages):
             f"[bold purple]Info[/bold purple]: total tokens used....: {total_tokens_this_session}"
         )
         print()
-
         messages.append(create_chat_message("assistant", response))
-
         if "summarize" in input_msg:
             # summarize the conversation
             # we want to keep the first 2 messages and the last 2 messages
@@ -192,12 +198,7 @@ def main_loop(provider, client, model, messages):
             rich.print(f"[bold purple]Info[/bold purple]: {messages}")
             # rich.print("--------------------")
             rich.print(markdown_hr)
-
         print_response(model, response)
-
-        # print_token_count(messages)
-        # print_num_messages(messages)
-        # print_avg_response_time()
     log_chat(provider, messages)
 
 
