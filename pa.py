@@ -6,16 +6,14 @@ import tiktoken
 from openai import OpenAI
 from datetime import datetime
 from time import sleep
-from rich.console import Console
-
 from rich.markdown import Markdown
 from typing import Any
 
 response_times = []
-
 token_checker = tiktoken.encoding_for_model("gpt-4o")
-
 total_tokens_this_session = 0
+file_memory = {}
+root_dir = "/home/darkmage/src/mikedesu/c/raylib-rpg-c-copy/src"
 
 
 def calculate_average_response_time(response_times: list) -> float:
@@ -30,10 +28,6 @@ def initialize_prompt(filename: str) -> str:
         return f.read().replace("\n", " ").strip()
 
 
-# def create_chat_message(role, content):
-#    return {"role": role, "content": content}
-
-
 def create_chat_message(role: str, content: str) -> dict:
     return {"role": role, "content": content}
 
@@ -43,7 +37,11 @@ def send_message(client, model, messages):
     while True:
         try:
             result = client.chat.completions.create(
-                model=model, messages=messages, stream=False
+                # model=model, messages=messages, stream=False
+                model=model,
+                messages=messages,
+                # tools=tools,
+                stream=False,
             )
             t1 = datetime.now()
             tdiff = t1 - t0
@@ -52,13 +50,18 @@ def send_message(client, model, messages):
             if len(result.choices) == 0:
                 raise Exception("result.choices is empty")
             # make sure message is not empty
-            if result.choices[0].message.content == "":
+            content = result.choices[0].message.content
+            if content == "":
                 raise Exception("result.choices[0].message.content is empty")
+            # tool_calls = result.choices[0].message.tool_calls
+            # if not tool_calls:
+            #    rich.print("[bold purple]Info[/bold purple]: no tool calls")
+            # return_result = (content, tool_calls)
             # return the response
-            return result.choices[0].message.content
+            # return result.choices[0].message.content
+            return content
         except Exception as e:
             rich.print("[bold red]Error[/bold red]: ", e)
-
             # we never want to see this...
             # if we do, we need to
             # 1. prune off the most recent message we added to the messages list
@@ -71,7 +74,6 @@ def send_message(client, model, messages):
             #        "please shorten your prompt or conversation history."
             #    )
             #    break
-
             sleep_time = 5
             for i in range(sleep_time):
                 rich.print(
@@ -92,30 +94,15 @@ def log_chat(provider, messages, chatlog_dir="chatlogs"):
         json.dump(messages, f, indent=4)
 
 
-# def print_token_count(messages):
-#    token_count = 0
-#    for msg in messages:
-#        token_count += len(msg["content"])
-#    rich.print("[bold purple]Info[/bold purple]: current tokens used:", token_count)
-
-
 def print_token_count(messages: list) -> None:
     """Prints total token count from message content."""
     token_count = sum(len(m["content"]) for m in messages)
     rich.print(f"[bold purple]Info[bold purple]: current tokens used: {token_count}")
 
 
-# def print_num_messages(messages):
-#    rich.print("[bold purple]Info[/bold purple]: current messages:", len(messages))
-
-
 def print_num_messages(messages: list) -> None:
     """Prints the count of messages."""
     rich.print(f"[bold purple]Info[bold purple]: current messages: {len(messages)}")
-
-
-# def print_response(model, response):
-#    rich.print(f"[bold green]{model}[/bold green]:", response, "\n")
 
 
 def print_response(model: str, response: Any) -> None:
@@ -130,9 +117,9 @@ def print_response(model: str, response: Any) -> None:
 def main_loop(provider, client, model, messages):
     global total_tokens_this_session
     # prompt = messages[-1]["content"]
-    response = send_message(client, model, messages)
-    messages.append(create_chat_message("assistant", response))
-    print_response(model, response)
+    response_content = send_message(client, model, messages)
+    print_response(model, response_content)
+    messages.append(create_chat_message("assistant", response_content))
     while True:
         lines = []
         rich.print("[bold green]You[/bold green]: ", end="")
@@ -176,29 +163,23 @@ def main_loop(provider, client, model, messages):
         markdown_hr = Markdown("--------------------")
         rich.print(markdown_hr)
         messages.append(create_chat_message("user", input_msg))
-        response = send_message(client, model, messages)
+        response_content = send_message(client, model, messages)
         # print estimated token count for response
-        tokens = token_checker.encode(response)
-        token_count = len(tokens)
-        rich.print(
-            f"[bold purple]Info[/bold purple]: estimated tokens recv: {token_count}"
-        )
-        total_tokens_this_session += token_count
-        rich.print(
-            f"[bold purple]Info[/bold purple]: total tokens used....: {total_tokens_this_session}"
-        )
-        print()
-        messages.append(create_chat_message("assistant", response))
-        if "summarize" in input_msg:
-            # summarize the conversation
-            # we want to keep the first 2 messages and the last 2 messages
-            # and delete the rest
-            updated_messages = messages[:2] + messages[-2:]
-            messages = updated_messages
-            rich.print(f"[bold purple]Info[/bold purple]: {messages}")
-            # rich.print("--------------------")
-            rich.print(markdown_hr)
-        print_response(model, response)
+        if response_content:
+            tokens = token_checker.encode(response_content)
+            token_count = len(tokens)
+            rich.print(
+                f"[bold purple]Info[/bold purple]: estimated tokens recv: {token_count}"
+            )
+            total_tokens_this_session += token_count
+            rich.print(
+                f"[bold purple]Info[/bold purple]: total tokens used....: {total_tokens_this_session}"
+            )
+            print()
+            messages.append(create_chat_message("assistant", response_content))
+            print_response(model, response_content)
+        else:
+            rich.print("[bold yellow]Warning[/bold yellow]: no response content")
     log_chat(provider, messages)
 
 
@@ -220,7 +201,7 @@ def print_avg_response_time():
     rich.print(outstr)
 
 
-def init_client(provider):
+def init_client(provider) -> OpenAI:
     if provider == "xai":
         return OpenAI(
             api_key=os.getenv("XAI_API_KEY"),
@@ -237,6 +218,16 @@ def init_client(provider):
         return OpenAI(
             base_url="https://api.deepseek.com", api_key=os.getenv("DEEPSEEK_API_KEY")
         )
+    elif provider == "google":
+        return OpenAI(
+            api_key=os.getenv("GEMINI_API_KEY"),
+            base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
+        )
+    # default to openai
+    return OpenAI(
+        api_key=os.getenv("OPENAI_API_KEY"),
+        organization=os.getenv("OPENAI_ORG"),
+    )
 
 
 def main():
@@ -246,7 +237,11 @@ def main():
     model = sys.argv[2]
     client = init_client(provider)
     prompt = initialize_prompt(sys.argv[3])
-    messages = [create_chat_message("system", prompt)]
+    if provider != "google":
+        messages = [create_chat_message("system", prompt)]
+    else:
+        # Google Gemini requires the prompt to be in the first message
+        messages = [create_chat_message("user", prompt)]
     try:
         main_loop(provider, client, model, messages)
     except KeyboardInterrupt:

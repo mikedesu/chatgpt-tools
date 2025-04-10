@@ -2,3 +2,5 @@
 chatlogs/*
 text_responses/*
 old_chatlogs
+tools
+build.py
