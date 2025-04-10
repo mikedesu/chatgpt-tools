@@ -14,12 +14,16 @@ A collection of tools I am writing and dabbling with that uses ChatGPT's API.
 Probably the most useful immediately is the CLI to ChatGPT. You'll need to switch out your `OPENAI_ORG` and `OPENAI_API_KEY` environment variables to make this work. 
 
 ```
-python3 pa.py <model> <prompt_filename>
+python3 pa.py <provider> <model> <prompt_filename>
 ```
 
 ```
 git clone https://github.com/mikedesu/chatgpt-tools.git
-python3 pa.py gpt3.5 coder.txt
+cd chatgpt-tools
+python3 pa.py openai gpt-3.5-turbo coder.txt
+python3 pa.py deepseek deepseek-chat coder.txt
+python3 pa.py xai grok-2-latest coder.txt
+python3 claude.py coder.txt
 ```
 
 
