@@ -4,6 +4,7 @@ import sys
 from rich.markdown import Markdown
 import json
 import os
+from anthropic.types import MessageStreamEvent
 
 
 def print_hr():
@@ -51,19 +52,46 @@ def main():
                 }
             )
             print_hr()
-            response = client.messages.create(
+
+            response_content = ""
+            rich.print(f"[bold green]{model}[/bold green]: ", end="", flush=True)
+            with client.messages.stream(
                 model=model,
                 max_tokens=max_tokens,
                 system=prompt,
                 messages=messages,
-            )
-            response_content = response.content[0].text
-            rich.print(f"[bold green]{model}[/bold green]: {response_content}")
-            response_message = {
-                "role": "assistant",
-                "content": response_content,
-            }
+            ) as stream:
+                for text in stream.text_stream:
+                    print(text, end="", flush=True)
+                    response_content += text
+
+            # for chunk in response:
+            #    if isinstance(chunk, MessageStreamEvent):
+            #        if chunk.type == "content_block_delta":
+            #            text = chunk.delta.text
+            #            print(text, end="", flush=True)
+            #            response_content += text
+
+            print()  # New line after stream ends
+
+            response_message = {"role": "assistant", "content": response_content}
             messages.append(response_message)
+
+            # response = client.messages.create(
+            #    model=model,
+            #    max_tokens=max_tokens,
+            #    system=prompt,
+            #    messages=messages,
+            # )
+            # response_content = response.content[0].text
+            ## rich.print(f"[bold green]{model}[/bold green]: {response_content}")
+            # rich.print(f"[bold green]{model}[/bold green]: ", end="")
+            # print(response_content)
+            # response_message = {
+            #    "role": "assistant",
+            #    "content": response_content,
+            # }
+            # messages.append(response_message)
     except KeyboardInterrupt:
         print_hr()
         log_chat("claude-3-5-sonnet", messages)

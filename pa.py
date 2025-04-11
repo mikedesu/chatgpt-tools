@@ -15,6 +15,21 @@ total_tokens_this_session = 0
 file_memory = {}
 root_dir = "/home/darkmage/src/mikedesu/c/raylib-rpg-c-copy/src"
 
+MODEL_CONTEXT = {
+    # OpenAI
+    "gpt-4o": 128000,
+    "gpt-4-turbo": 128000,
+    "gpt-3.5-turbo": 16000,
+    # xAI
+    "grok-2-latest": 128000,
+    # Deepseek
+    "deepseek-chat": 128000,
+    # Google (conservative)
+    "gemini-1.5": 32000,
+    # Local
+    "llama3-8b": 8000,
+}
+
 
 def calculate_average_response_time(response_times: list) -> float:
     if not response_times:
@@ -36,44 +51,29 @@ def send_message(client, model, messages):
     t0 = datetime.now()
     while True:
         try:
-            result = client.chat.completions.create(
-                # model=model, messages=messages, stream=False
+            stream = client.chat.completions.create(
                 model=model,
                 messages=messages,
-                # tools=tools,
-                stream=False,
+                stream=True,
             )
+            print()
+            print("-------------------")
+            print()
+            rich.print(f"[bold green]{model}[/bold green]: ", end="", flush=True)
+            content = ""
+            for chunk in stream:
+                if chunk.choices[0].delta.content:
+                    print(chunk.choices[0].delta.content, end="", flush=True)
+                    content += chunk.choices[0].delta.content
+            print()
+            print("-------------------")
+            print()
             t1 = datetime.now()
             tdiff = t1 - t0
             response_times.append(tdiff.total_seconds())
-            # make sure result.choices is not empty
-            if len(result.choices) == 0:
-                raise Exception("result.choices is empty")
-            # make sure message is not empty
-            content = result.choices[0].message.content
-            if content == "":
-                raise Exception("result.choices[0].message.content is empty")
-            # tool_calls = result.choices[0].message.tool_calls
-            # if not tool_calls:
-            #    rich.print("[bold purple]Info[/bold purple]: no tool calls")
-            # return_result = (content, tool_calls)
-            # return the response
-            # return result.choices[0].message.content
             return content
         except Exception as e:
             rich.print("[bold red]Error[/bold red]: ", e)
-            # we never want to see this...
-            # if we do, we need to
-            # 1. prune off the most recent message we added to the messages list
-            # 2. prune off the most recent message we received from the assistant
-            # 3. ask it to summarize everything up to this point
-            # 4. clear the messages list and add the system prompt and summary
-            # if "maximum context length" in str(e):
-            #    rich.print(
-            #        "[bold red]Error[/bold red]: maximum context length exceeded, "
-            #        "please shorten your prompt or conversation history."
-            #    )
-            #    break
             sleep_time = 5
             for i in range(sleep_time):
                 rich.print(
@@ -118,7 +118,7 @@ def main_loop(provider, client, model, messages):
     global total_tokens_this_session
     # prompt = messages[-1]["content"]
     response_content = send_message(client, model, messages)
-    print_response(model, response_content)
+    # print_response(model, response_content)
     messages.append(create_chat_message("assistant", response_content))
     while True:
         lines = []
@@ -126,6 +126,9 @@ def main_loop(provider, client, model, messages):
         input_msg = ""
         try:
             input_msg = input()
+            if input_msg.startswith("/"):
+                handle_command(client, model, input_msg, messages)  # New function
+                continue
         except EOFError:
             break
         if input_msg in ("exit", "quit"):
@@ -175,12 +178,55 @@ def main_loop(provider, client, model, messages):
             rich.print(
                 f"[bold purple]Info[/bold purple]: total tokens used....: {total_tokens_this_session}"
             )
-            print()
+            # print()
             messages.append(create_chat_message("assistant", response_content))
-            print_response(model, response_content)
+            # print_response(model, response_content)
         else:
             rich.print("[bold yellow]Warning[/bold yellow]: no response content")
     log_chat(provider, messages)
+
+
+def handle_command(client, model, cmd: str, messages: list) -> None:
+    if cmd == "/summarize":
+        summary = force_summarize(client, model, messages)
+        messages[:] = [
+            messages[0],
+            messages[1],
+            create_chat_message("assistant", summary),
+        ]
+    elif cmd == "/history":
+        print_message_history(messages)  # New function
+    elif cmd == "/reset":
+        messages[:] = [
+            messages[0],
+            messages[1],
+        ]  # Keep only system prompt and assistant response
+        rich.print("History reset")
+
+
+def print_message_history(messages: list) -> None:
+    rich.print("\nMessage History:")
+    for i, msg in enumerate(messages):
+        role = msg["role"]
+        x = 80
+        content = (
+            msg["content"][:x] + "..." if len(msg["content"]) > x else msg["content"]
+        )
+        rich.print(f"{i}. {role}: {content}")
+
+
+def force_summarize(client, model, messages: list) -> str:
+    response = send_message(
+        client,
+        model,
+        messages
+        + [
+            create_chat_message(
+                "user", "Summarize this conversation concisely as bullet points."
+            )
+        ],
+    )
+    return response
 
 
 def print_usage():
