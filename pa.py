@@ -8,12 +8,11 @@ from datetime import datetime
 from time import sleep
 from rich.markdown import Markdown
 from typing import Any
+from datetime import timedelta
 
 response_times = []
 token_checker = tiktoken.encoding_for_model("gpt-4o")
 total_tokens_this_session = 0
-file_memory = {}
-root_dir = "/home/darkmage/src/mikedesu/c/raylib-rpg-c-copy/src"
 
 MODEL_CONTEXT = {
     # OpenAI
@@ -61,10 +60,22 @@ def send_message(client, model, messages):
             print()
             rich.print(f"[bold green]{model}[/bold green]: ", end="", flush=True)
             content = ""
+            # for chunk in stream:
+            #    if chunk.choices[0].delta.content:
+            #        print(chunk.choices[0].delta.content, end="", flush=True)
+            #        content += chunk.choices[0].delta.content
+
+            timeout = timedelta(seconds=30)  # Adjust as needed
+            start_time = datetime.now()
             for chunk in stream:
-                if chunk.choices[0].delta.content:
-                    print(chunk.choices[0].delta.content, end="", flush=True)
-                    content += chunk.choices[0].delta.content
+                if datetime.now() - start_time > timeout:
+                    raise TimeoutError("Stream response timed out")
+                if not chunk.choices:  # Guard against empty choices
+                    continue
+                delta = chunk.choices[0].delta  # Safe after empty check
+                if delta and delta.content:  # Validate delta exists
+                    print(delta.content, end="", flush=True)
+                    content += delta.content
             print()
             print("-------------------")
             print()
@@ -94,10 +105,16 @@ def log_chat(provider, messages, chatlog_dir="chatlogs"):
         json.dump(messages, f, indent=4)
 
 
+# def print_token_count(messages: list) -> None:
+#    """Prints total token count from message content."""
+#    token_count = sum(len(m["content"]) for m in messages)
+#    rich.print(f"[bold purple]Info[bold purple]: current tokens used: {token_count}")
+
+
 def print_token_count(messages: list) -> None:
-    """Prints total token count from message content."""
-    token_count = sum(len(m["content"]) for m in messages)
-    rich.print(f"[bold purple]Info[bold purple]: current tokens used: {token_count}")
+    """Prints actual token count from message content."""
+    tokens = sum(len(token_checker.encode(m["content"])) for m in messages)
+    rich.print(f"[bold purple]Info[/bold purple]: current tokens used: {tokens}")
 
 
 def print_num_messages(messages: list) -> None:
