@@ -60,12 +60,8 @@ def send_message(client, model, messages):
             print()
             rich.print(f"[bold green]{model}[/bold green]: ", end="", flush=True)
             content = ""
-            # for chunk in stream:
-            #    if chunk.choices[0].delta.content:
-            #        print(chunk.choices[0].delta.content, end="", flush=True)
-            #        content += chunk.choices[0].delta.content
-
-            timeout = timedelta(seconds=30)  # Adjust as needed
+            timeout_seconds = 120
+            timeout = timedelta(seconds=timeout_seconds)
             start_time = datetime.now()
             for chunk in stream:
                 if datetime.now() - start_time > timeout:
@@ -105,12 +101,6 @@ def log_chat(provider, messages, chatlog_dir="chatlogs"):
         json.dump(messages, f, indent=4)
 
 
-# def print_token_count(messages: list) -> None:
-#    """Prints total token count from message content."""
-#    token_count = sum(len(m["content"]) for m in messages)
-#    rich.print(f"[bold purple]Info[bold purple]: current tokens used: {token_count}")
-
-
 def print_token_count(messages: list) -> None:
     """Prints actual token count from message content."""
     tokens = sum(len(token_checker.encode(m["content"])) for m in messages)
@@ -125,17 +115,12 @@ def print_num_messages(messages: list) -> None:
 def print_response(model: str, response: Any) -> None:
     """Pretty-prints model responses using rich formatting."""
     response += "\n\n-------------------\n"
-    # mkdn = Markdown(response)
-    # rich.print(f"[bold green]{model}[/bold green]:", mkdn, "\n")
     rich.print(f"[bold green]{model}[/bold green]:", response, "\n")
-    # Console().print(f"{model}:", response, "\n")
 
 
 def main_loop(provider, client, model, messages):
     global total_tokens_this_session
-    # prompt = messages[-1]["content"]
     response_content = send_message(client, model, messages)
-    # print_response(model, response_content)
     messages.append(create_chat_message("assistant", response_content))
     while True:
         lines = []
@@ -198,11 +183,9 @@ def main_loop(provider, client, model, messages):
             rich.print(
                 f"[bold purple]Info[/bold purple]: estimated tokens messages: {estimate_token_count(messages)}"
             )
-
             rich.print(
                 f"[bold purple]Info[/bold purple]: estimated tokens limit...: {MODEL_CONTEXT[model]}"
             )
-
             # print()
             messages.append(create_chat_message("assistant", response_content))
             # print_response(model, response_content)
