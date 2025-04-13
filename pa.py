@@ -195,12 +195,28 @@ def main_loop(provider, client, model, messages):
             rich.print(
                 f"[bold purple]Info[/bold purple]: total tokens used....: {total_tokens_this_session}"
             )
+            rich.print(
+                f"[bold purple]Info[/bold purple]: estimated tokens messages: {estimate_token_count(messages)}"
+            )
+
+            rich.print(
+                f"[bold purple]Info[/bold purple]: estimated tokens limit...: {MODEL_CONTEXT[model]}"
+            )
+
             # print()
             messages.append(create_chat_message("assistant", response_content))
             # print_response(model, response_content)
         else:
             rich.print("[bold yellow]Warning[/bold yellow]: no response content")
     log_chat(provider, messages)
+
+
+def estimate_token_count(messages: list) -> int:
+    """Estimates the token count based on the model context."""
+    total_tokens = 0
+    for message in messages:
+        total_tokens += len(token_checker.encode(message["content"]))
+    return total_tokens
 
 
 def handle_command(client, model, cmd: str, messages: list) -> None:
