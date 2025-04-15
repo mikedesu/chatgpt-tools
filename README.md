@@ -37,5 +37,6 @@ Next is the audio transcription feature that allows you to upload an audio file 
 python3 whisper.py <filename> <outfile>
 ```
 
-[![asciicast](https://asciinema.org/a/xcGyupY0vqEuicqybO93skyE9.svg)](https://asciinema.org/a/xcGyupY0vqEuicqybO93skyE9)
+[![asciicast](https://asciinema.org/a/715888.svg)](https://asciinema.org/a/715888)
+
 

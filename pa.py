@@ -16,17 +16,20 @@ total_tokens_this_session = 0
 
 MODEL_CONTEXT = {
     # OpenAI
-    "gpt-4o": 128000,
-    "gpt-4-turbo": 128000,
-    "gpt-3.5-turbo": 16000,
+    "gpt-4.1": 1_047_576,
+    "gpt-4.1-mini": 1_047_576,
+    "gpt-4.1-nano": 1_047_576,
+    "gpt-4o": 128_000,
+    "gpt-4-turbo": 128_000,
+    "gpt-3.5-turbo": 16_000,
     # xAI
-    "grok-2-latest": 128000,
+    "grok-2-latest": 128_000,
     # Deepseek
-    "deepseek-chat": 128000,
+    "deepseek-chat": 128_000,
     # Google (conservative)
-    "gemini-1.5": 32000,
+    "gemini-1.5": 32_000,
     # Local
-    "llama3-8b": 8000,
+    "llama3-8b": 8_000,
 }
 
 
@@ -186,7 +189,7 @@ def main_loop(provider, client, model, messages):
             rich.print(
                 f"[bold purple]Info[/bold purple]: estimated tokens limit...: {MODEL_CONTEXT[model]}"
             )
-            # print()
+            print()
             messages.append(create_chat_message("assistant", response_content))
             # print_response(model, response_content)
         else:
