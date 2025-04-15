@@ -27,16 +27,7 @@ python3 claude.py coder.txt
 ```
 
 
-[![asciicast](https://asciinema.org/a/3AviNnbVq27NTboeUfKndZwq2.svg)](https://asciinema.org/a/3AviNnbVq27NTboeUfKndZwq2)
-
----
-
-Next is the audio transcription feature that allows you to upload an audio file to OpenAI's "Whisper" API and get back a text file containing the audio transcribed as plaintext.
-
-```
-python3 whisper.py <filename> <outfile>
-```
-
 [![asciicast](https://asciinema.org/a/715888.svg)](https://asciinema.org/a/715888)
 
+---
 
